@@ -1,0 +1,85 @@
+Importar bibliotecas y recursos necesarios:
+
+Se importan las bibliotecas necesarias, como re para manejar expresiones regulares, nltk para procesamiento de lenguaje natural y pandas para manipular datos tabulares.
+Se descargan recursos adicionales de NLTK como las stopwords (palabras comunes que generalmente se consideran irrelevantes para el análisis de texto) y el tokenizador.
+Función de preprocesamiento de texto (preprocess_text):
+
+Esta función toma un texto como entrada y realiza varias transformaciones para preprocesarlo antes de alimentarlo al modelo:
+Convierte el texto a minúsculas.
+Utiliza expresiones regulares para eliminar caracteres especiales y números.
+Tokeniza el texto en palabras.
+Elimina las stopwords del texto.
+Finalmente, une las palabras preprocesadas en una sola cadena de texto.
+Cargar y preprocesar el conjunto de datos:
+
+Se carga un archivo CSV que contiene datos etiquetados como spam o no spam en un DataFrame de Pandas.
+Se asigna la columna de texto ('text') como características (X) y la columna de etiquetas ('label_num') como etiquetas (y).
+Se aplica la función de preprocesamiento de texto a todas las muestras de texto en el conjunto de datos.
+División de datos:
+
+Los datos se dividen en conjuntos de entrenamiento, validación y prueba utilizando train_test_split de sklearn.model_selection.
+Vectorización TF-IDF:
+
+Se inicializa un vectorizador TF-IDF (TfidfVectorizer) con un máximo de 3500 características.
+Se ajusta y transforma el conjunto de entrenamiento utilizando el vectorizador TF-IDF.
+Se transforman los conjuntos de validación y prueba utilizando el mismo vectorizador TF-IDF.
+Las matrices dispersas resultantes se convierten en matrices densas.
+Con esto, los datos están listos para ser alimentados a un modelo de red neuronal para la clasificación de spam y no spam. El código utiliza la representación TF-IDF de los textos como características para el modelo de red neuronal.
+
+
+Paso 2: Función de preprocesamiento de texto (preprocess_text):
+Tokenización:
+La tokenización es el proceso de dividir un texto en unidades más pequeñas llamadas tokens. En este caso, la función word_tokenize de NLTK se utiliza para dividir el texto en palabras individuales. Por ejemplo, la oración "Hola, ¿cómo estás?" sería tokenizada en ["Hola", ",", "¿", "cómo", "estás", "?"]. Esto permite al modelo trabajar con unidades de texto más pequeñas, las palabras individuales, en lugar de procesar el texto como una cadena continua.
+
+Paso 5: Vectorización TF-IDF:
+Vectorizador TF-IDF (Term Frequency-Inverse Document Frequency):
+TF-IDF es una técnica de procesamiento de texto utilizada para convertir colecciones de documentos (en este caso, correos electrónicos) en representaciones numéricas que pueden ser entendidas por algoritmos de aprendizaje automático.
+
+Term Frequency (TF): Mide la frecuencia con la que aparece una palabra en un documento. Cuantas más veces aparezca una palabra en un documento, más importante puede ser. Sin embargo, es posible que algunas palabras muy frecuentes en un documento no sean necesariamente importantes (por ejemplo, artículos, preposiciones). Por lo tanto, es común normalizar la frecuencia de una palabra dividiendo el número de veces que aparece por el número total de palabras en el documento.
+
+Inverse Document Frequency (IDF): Mide la importancia de una palabra en el conjunto de documentos. Las palabras que aparecen en muchos documentos tendrán un IDF más bajo, ya que son menos discriminativas en comparación con las palabras que aparecen en unos pocos documentos. Se calcula como el logaritmo del cociente entre el número total de documentos y el número de documentos que contienen la palabra en cuestión.
+
+TF-IDF: Multiplica TF por IDF para obtener un puntaje que refleje la importancia de una palabra en un documento en relación con su importancia en todo el conjunto de documentos.
+
+El vectorizador TF-IDF transforma cada documento de texto en un vector numérico donde cada elemento del vector representa la importancia de una palabra en ese documento. El parámetro max_features controla el tamaño del vocabulario, es decir, el número máximo de palabras que se tendrán en cuenta. En este caso, se ha establecido en 3500, lo que significa que solo se considerarán las 3500 palabras más frecuentes en el conjunto de datos.
+
+Espero que esto aclare tus dudas. Si necesitas más información, no dudes en preguntar.
+
+
+
+
+
+
+
+¿Qué es el TfidfVectorizer?
+El TfidfVectorizer es una clase en la biblioteca scikit-learn de Python, que se utiliza para convertir colecciones de documentos de texto en vectores numéricos usando el esquema TF-IDF. TF-IDF significa "Term Frequency-Inverse Document Frequency" (Frecuencia del Término-Frecuencia Inversa del Documento). Es una técnica utilizada comúnmente en minería de texto para representar la importancia relativa de un término en un documento dado o en una colección de documentos.
+
+¿Cómo funciona?
+Term Frequency (TF - Frecuencia del Término): Es la frecuencia con la que aparece un término en un documento. Cuantas más veces aparezca un término en un documento, mayor será su TF.
+
+Inverse Document Frequency (IDF - Frecuencia Inversa del Documento): Mide la importancia de un término en todo el corpus. Los términos que aparecen en muchos documentos tendrán un IDF más bajo, mientras que los términos raros tendrán un IDF más alto.
+
+TF-IDF: Es el producto de TF y IDF. Esencialmente, calcula cuán importante es una palabra en un documento en relación con su importancia en todo el corpus.
+
+Parámetros importantes del TfidfVectorizer:
+max_features: Especifica el número máximo de características (términos) que se usarán al construir los vectores. Esto limita la dimensionalidad del espacio vectorial resultante.
+
+stop_words: Una lista de palabras comunes que se ignorarán durante el proceso de vectorización. Estas palabras generalmente no aportan mucha información y pueden ser eliminadas para mejorar la precisión del modelo.
+
+ngram_range: Especifica el rango de n-gramas que se utilizarán para construir las características. Por ejemplo, ngram_range=(1, 2) consideraría tanto unigramas como bigramas.
+
+tokenizer: Especifica el método para tokenizar el texto en palabras o n-gramas. Por defecto, utiliza la tokenización de palabras.
+
+
+
+El vectorizador TF-IDF puede producir vectores dispersos (sparse vectors), lo que significa que la mayoría de los elementos en el vector serán cero. Esto es completamente normal y se debe a la naturaleza de cómo funciona el esquema TF-IDF y cómo se representa la matriz resultante.
+
+Aquí hay algunas razones por las cuales puede haber muchos ceros en la matriz resultante:
+
+Vocabulario grande: Si el número total de términos en el vocabulario es mucho mayor que el número de términos que aparecen en un documento específico, la mayoría de los elementos en el vector resultante serán cero.
+
+Documentos cortos: Si los documentos son relativamente cortos, es posible que solo contengan una pequeña fracción del vocabulario total, lo que resulta en muchos ceros en los vectores TF-IDF.
+
+Stop words: Si se eliminaron las palabras comunes (stop words) durante la tokenización, es probable que muchas de las características resultantes sean cero en los documentos.
+
+IDF elevado: Palabras que son muy específicas de un documento o aparecen en muy pocos documentos pueden tener un IDF elevado, lo que lleva a valores TF-IDF más altos para esas palabras en ese documento específico y ceros en otros documentos.
