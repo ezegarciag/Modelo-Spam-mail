@@ -1,0 +1,2 @@
+
+For task 2, develop two models: a neural network and a regression model. both fulfill the specified task
